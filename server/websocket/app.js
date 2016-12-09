@@ -1,4 +1,4 @@
-const userSocket = require('./socketserver.js');
+const userSocket = require('./socketserveruser.js');
 
 function load(server) {
 	var io = require('socket.io')(server);

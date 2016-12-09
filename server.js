@@ -23,7 +23,7 @@ server.listen(port, function () {
 /**
  * Load socket
  */
-const socket = require('./server/websocket/app');
+const socket = require('./websocket/app');
 socket.load(server);
 
 module.exports = app;
