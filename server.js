@@ -1,7 +1,7 @@
 'use strict'
 
 // Dependencies
-const express = require('express');
+const express = require('./server/node_modules/express');
 const middleware = require('./server/express/lib/middleware');
 
 // Create new express application
@@ -23,8 +23,8 @@ server.listen(port, function () {
 /**
  * Load socket
  */
-const socket = require('./websocket/app');
-socket.load(server);
+const socket_ = require('./server/websocket/app');
+socket_.loadApp(server);
 
 module.exports = app;
 

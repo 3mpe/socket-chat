@@ -1,9 +1,9 @@
 const userSocket = require('./socketserveruser.js');
 
-function load(server) {
+function loadApp(server) {
 	var io = require('socket.io')(server);
-	userSocket.load(server, io);
+	userSocket.userSocket(server, io);
 }
 
-module.exports = load;
+module.exports = { loadApp };
 

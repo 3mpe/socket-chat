@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 var host, port, username, password, database, url;
 
-if (process.env.SERVER_SOFTWARE == 'bae/3.0') {
+if (process.env.SERVER_SOFTWARE == 'dbconnect/3.0') {
 	host = 'mongo.duapp.com';
 	username = "78b39e5c37054e82865b9d2bda504946",
 		password = "d61d4f7285e44b7083000c287f65074f",
@@ -14,7 +14,6 @@ if (process.env.SERVER_SOFTWARE == 'bae/3.0') {
 	port = 12345;
 	url = "mongodb://127.0.0.1:12345/blog";
 }
-
 
 var recon = true;
 

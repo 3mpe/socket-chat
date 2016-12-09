@@ -2,6 +2,9 @@
 const bodyParser = require('body-parser');
 const session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
+var logger = require('morgan');
+var cookieParser = require('cookie-parser');
+var dbconnect = require('./dbconnect');
 
 // Init
 const middleware = {};
@@ -16,11 +19,6 @@ middleware.load = function (app) {
 		next();
 	});
 
-	// view engine setup
-	app.set('views', path.join(__dirname, 'views'));
-	app.set('view engine', 'jade');
-
-
 	app.use(logger('dev')); // günlük log saklamak için
 	app.use(cookieParser());
 	app.use(bodyParser.json());
@@ -32,7 +30,7 @@ middleware.load = function (app) {
 		saveUninitialized: false,
 		cookie: { maxAge: 3600000 },
 		store: new MongoStore({
-			mongooseConnection: bae.mongoose.connection
+			mongooseConnection: dbconnect.mongoose.connection
 		})
 	}));
 
@@ -49,6 +47,7 @@ middleware.load = function (app) {
 			next();
 		}
 	});
+	
 };
 
 module.exports = middleware;
