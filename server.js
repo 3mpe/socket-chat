@@ -1,14 +1,4 @@
-'use strict'
-
-// Dependencies
-const express = require('./server/node_modules/express');
-const middleware = require('./server/express/lib/middleware');
-
-// Create new express application
-const app = express();
-
-// Middleware
-middleware.load(app);
+const app = require('./server/express/app');
 const http = require('http');
 const server = http.createServer(app);
 const port = 8080;

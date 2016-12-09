@@ -1,5 +1,7 @@
 var mongoose = require('mongoose');
-const fallowSchema = mongose.Schema({
+const Schema = mongoose.Schema;
+
+var fallowSchema = Schema({
 	name: {
 		first: String,
 		last: String

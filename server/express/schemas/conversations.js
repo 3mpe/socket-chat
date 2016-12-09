@@ -1,6 +1,7 @@
-const mongose = required('mongoose');
+const mongoose = required('mongoose');
+const Schema = mongoose.Schema;
 
-const conversationsSchema = mongose.Schema({
+const conversationsSchema = Schema({
 	sender_id : {
 		type:String
 	}

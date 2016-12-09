@@ -1,6 +1,7 @@
-const mongose = required('mongoose');
+const mongoose = required('mongoose');
+const Schema = mongoose.Schema;
 
-const userMessageSchema = mongose.Schema({
+const userMessageSchema = Schema({
 	conversations: [{ type: Schema.Types.ObjectId, ref: 'conversations' }],
 	name: {
 		type: String

@@ -1,5 +1,7 @@
 var mongoose = require('mongoose');
-const singUpDateSchema = mongose.Schema({
+const Schema = mongoose.Schema;
+
+const singUpDateSchema = Schema({
 	singup: {
 		type: Date,
 		default: Date.now()

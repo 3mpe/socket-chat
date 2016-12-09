@@ -25,7 +25,7 @@ middleware.load = function (app) {
 	app.use(bodyParser.urlencoded({ extended: false }));
 
 	app.use(session({
-		secret: 'keyboard cat',
+		secret: 'gizli bilgi',
 		resave: false,
 		saveUninitialized: false,
 		cookie: { maxAge: 3600000 },
@@ -34,20 +34,20 @@ middleware.load = function (app) {
 		})
 	}));
 
-	app.use(function (req, res, next) {
-		if (req.session.loggedIn) {
-			res.locals.authenticated = true;
-			User.findById(req.session.loggedIn, function (err, doc) {
-				if (err) return next(err);
-				res.locals.me = doc;
-				next();
-			});
-		} else {
-			res.locals.authenticated = false;
+	app.use(function (request, response, next) {
+		
+		var bearerToken;
+		var bearerHeader = request.headers["Authorization"];
+		if (typeof bearerHeader !== 'undefined') {
+			var bearer = bearerHeader.split(" ");
+			bearerToken = bearer[1];
+			request.token = bearerToken;
 			next();
+		} else {
+			response.send(403);
 		}
+
 	});
-	
 };
 
 module.exports = middleware;
