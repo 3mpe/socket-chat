@@ -1,4 +1,4 @@
-# socket-chat
+# Chat
 ## NodeJs + Mongodb + Express + Socket.io
 
 **a simple blog system powered by Nodejs, Mongoldb, Express and Socket.io**
