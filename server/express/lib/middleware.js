@@ -24,18 +24,18 @@ middleware.load = function (app) {
 	app.use(bodyParser.json());
 	app.use(bodyParser.urlencoded({ extended: false }));
 
-	app.use(session({
-		secret: 'gizli bilgi',
-		resave: false,
-		saveUninitialized: false,
-		cookie: { maxAge: 3600000 },
-		store: new MongoStore({
-			mongooseConnection: dbconnect.mongoose.connection
-		})
-	}));
+	//app.use(session({
+	//	secret: 'gizli bilgi',
+	//	resave: false,
+	//	saveUninitialized: false,
+	//	cookie: { maxAge: 3600000 },
+	//	store: new MongoStore({
+	//		mongooseConnection: dbconnect.mongoose.connection
+	//	})
+	//}));
+
 
 	app.use(function (request, response, next) {
-		
 		var bearerToken;
 		var bearerHeader = request.headers["Authorization"];
 		if (typeof bearerHeader !== 'undefined') {
@@ -44,7 +44,8 @@ middleware.load = function (app) {
 			request.token = bearerToken;
 			next();
 		} else {
-			response.send(403);
+			//response.send(403);
+			next();
 		}
 
 	});
