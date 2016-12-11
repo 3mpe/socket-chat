@@ -1,4 +1,4 @@
-const jwt = require('jsonwebtoken');
+const token = require('../lib/token');
 const User = require('../models/users');
 
 const userCrud = {};
@@ -25,7 +25,8 @@ userCrud.login = function (request, response, next) {
 			});
 		} else {
 			if (user) {
-				var token = jwt.sign(user, process.env.JWT_SECRET);
+
+				var token = token;
 				update({ _id: user._id }, { token: token }, function (error, data) {
 					response.json({
 						type: true,

@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
-var token = jwt.sign({ secret: 'bu gizli bir bilgidir' }, 'shhhhh');
+const config = require('./config');
+var token = jwt.sign({ secret: config.scret }, 'shhhhh');
 
 module.exports = token;
 

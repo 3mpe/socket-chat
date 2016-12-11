@@ -1,10 +1,11 @@
 // Modules
+const config = require('./config');
 const bodyParser = require('body-parser');
 const session = require('express-session');
-var MongoStore = require('connect-mongo')(session);
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var dbconnect = require('./dbconnect');
+const MongoStore = require('connect-mongo')(session);
+const logger = require('morgan');
+const cookieParser = require('cookie-parser');
+const dbconnect = require('./dbconnect');
 
 // Init
 const middleware = {};
@@ -24,30 +25,27 @@ middleware.load = function (app) {
 	app.use(bodyParser.json());
 	app.use(bodyParser.urlencoded({ extended: false }));
 
-	//app.use(session({
-	//	secret: 'gizli bilgi',
-	//	resave: false,
-	//	saveUninitialized: false,
-	//	cookie: { maxAge: 3600000 },
-	//	store: new MongoStore({
-	//		mongooseConnection: dbconnect.mongoose.connection
-	//	})
-	//}));
-
+	app.use('/user/store',function (request, response, next) {
+		const userStore = require('../controller/user');
+		userStore.store(request, response, next);
+	});
 
 	app.use(function (request, response, next) {
-		var bearerToken;
-		var bearerHeader = request.headers["Authorization"];
-		if (typeof bearerHeader !== 'undefined') {
-			var bearer = bearerHeader.split(" ");
-			bearerToken = bearer[1];
-			request.token = bearerToken;
-			next();
-		} else {
-			//response.send(403);
-			next();
-		}
+		// check header or url parameters or post parameters for token
+		  var token = req.body.token || req.query.token || req.headers['Authorization'];
 
+		  //decode token
+		  if (token) {
+		  	const jwt = require('jsonwebtoken');
+		  	jwt.verify(token, config.scret, function(err, decoded) {
+		  		if (err) { res.json({ success: false, message: 'Failed to authenticate token.' }); }
+		  		request.decoded  = decoded;
+		  		next();
+		  	});
+		  }
+		  else{
+		  	response.send(403);
+		  }
 	});
 };
 
