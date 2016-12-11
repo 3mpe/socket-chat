@@ -31,9 +31,8 @@ middleware.load = function (app) {
 	});
 
 	app.use(function (request, response, next) {
-		// check header or url parameters or post parameters for token
+		  // check header or url parameters or post parameters for token
 		  var token = req.body.token || req.query.token || req.headers['Authorization'];
-
 		  //decode token
 		  if (token) {
 		  	const jwt = require('jsonwebtoken');
@@ -50,4 +49,3 @@ middleware.load = function (app) {
 };
 
 module.exports = middleware;
-
