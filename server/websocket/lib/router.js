@@ -1,4 +1,4 @@
-const { fallow }  = require('../controller/user')
+const { fallow }  = require('../controller/fallow')
 const { message } = require('../controller/message')
 
 function loadApp(server, io) {

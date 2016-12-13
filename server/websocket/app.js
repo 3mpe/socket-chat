@@ -1,7 +1,7 @@
 const router = require('./lib/router');
-var io = require('socket.io')(server);
 
 function loadApp(server) {
+	var io = require('socket.io')(server);
 	/* To listen to one source */
 	router.loadApp(server, io);
 }
