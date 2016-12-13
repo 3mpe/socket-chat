@@ -4,14 +4,13 @@ const fallow = {};
 
 
 function findUser(request, response, calback) {
-	User.find({ user_id: request.body.user_id }, function (error, foundUser) {
+	User.find({ token: request.token }, function (error, foundUser) {
 		if (error) { response.json({ message: error.errors }); }
 		if (calback instanceof Function) {
 			calback(foundUser);
 		}
 	});
 };
-
 function update(params, updateParams, calback) {
 	if (calback instanceof Function) {
 		User_fallow.findByIdAndUpdate(params, updateParams, calback());
@@ -21,11 +20,13 @@ function update(params, updateParams, calback) {
 
 
 fallow.index = function (request, response, next) {
-	User_fallow.find({ user_id: request.body.user_id }, function (error, User_data) {
-		if (error) {
-			return response.json({ message: error.errors });
-		}
-		return response.json({ fallowed: User_data });
+	findUser(request, response, function (foundUser) {
+		User_fallow.find({ user_id: foundUser.user_id }, function (error, User_data) {
+			if (error) {
+				return response.json({ message: error.errors });
+			}
+			return response.json({ fallowed: User_data });
+		});
 	});
 };
 fallow.storeFallowing = function (request, response, next) {
@@ -45,6 +46,7 @@ fallow.storeFallowing = function (request, response, next) {
 					return response.json({ message: 'fallowing update!', data: fallow });
 				});
 			}
+
 		});
 	});
 };
@@ -69,15 +71,19 @@ fallow.storeFallowed = function (request, response, next) {
 	});
 };
 fallow.deleteFallowing = function (request, response, next) {
-	update({ user_id: request.body.user_id, fallowing_id: request.body.fallowing_id }, { status: 'Deleted' }, function (foundFallo) {
-		if (error) { response.json({ message: ' fallowing is not deleted! ' }); }
-		return response.json({ message: 'fallowing deleted !', data: foundFallo });
+	findUser(request, response, function (foundUser) {
+		update({ user_id: foundUser.user_id, fallowing_id: request.body.fallowing_id }, { status: 'Deleted' }, function (foundFallo) {
+			if (error) { response.json({ message: ' fallowing is not deleted! ' }); }
+			return response.json({ message: 'fallowing deleted !', data: foundFallo });
+		});
 	});
 };
 fallow.deleteFallowed = function (request, response, next) {
-	update({ user_id: request.body.user_id, fallowed_id: request.body.fallowed_id }, { status: 'Deleted' }, function (foundFallo) {
-		if (error) { response.json({ message: ' fallowed is not deleted! ' }); }
-		return response.json({ message: 'fallowed deleted !', data: foundFallo });
+	findUser(request, response, function (foundUser) {
+		update({ user_id: foundUser.user_id, fallowed_id: request.body.fallowed_id }, { status: 'Deleted' }, function (foundFallo) {
+			if (error) { response.json({ message: ' fallowed is not deleted! ' }); }
+			return response.json({ message: 'fallowed deleted !', data: foundFallo });
+		});
 	});
 };
 

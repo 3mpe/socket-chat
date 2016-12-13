@@ -24,28 +24,27 @@ middleware.load = function (app) {
 	app.use(cookieParser());
 	app.use(bodyParser.json());
 	app.use(bodyParser.urlencoded({ extended: false }));
+	
+	app.use(function (req, res, next) {
+		// check header or url parameters or post parameters for token
+		if (req.url !== "/user/store") {
+			var token = req.body.token || req.query.token || req.headers['Authorization'] || req.headers['authorization'];
+			//decode token
+			if (token) {
+				const jwt = require('jsonwebtoken');
+				jwt.verify(token, 'shhhhh', function (err, decoded) {
+					if (err) { res.json({ success: false, message: 'Failed to authenticate token.' }); }
+					req.token = token;
+					req.decoded = decoded.iat;
+					next();
+				});
+			} else {
+				res.send(403);
+			}
+		} else { next(); }
 
-	app.use('/user/store',function (request, response, next) {
-		const userStore = require('../controller/user');
-		userStore.store(request, response, next);
-	});
-
-	app.use(function (request, response, next) {
-		  // check header or url parameters or post parameters for token
-		  var token = req.body.token || req.query.token || req.headers['Authorization'];
-		  //decode token
-		  if (token) {
-		  	const jwt = require('jsonwebtoken');
-		  	jwt.verify(token, config.scret, function(err, decoded) {
-		  		if (err) { res.json({ success: false, message: 'Failed to authenticate token.' }); }
-		  		request.decoded  = decoded;
-		  		next();
-		  	});
-		  }
-		  else{
-		  	response.send(403);
-		  }
 	});
 };
 
 module.exports = middleware;
+
