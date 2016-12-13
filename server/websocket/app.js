@@ -1,8 +1,9 @@
-const userSocket = require('./socketserveruser.js');
+const router = require('./lib/router');
+var io = require('socket.io')(server);
 
 function loadApp(server) {
-	var io = require('socket.io')(server);
-	userSocket.userSocket(server, io);
+	/* To listen to one source */
+	router.loadApp(server, io);
 }
 
 module.exports = { loadApp };
