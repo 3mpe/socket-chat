@@ -10,8 +10,6 @@ function load(app) {
 	app.get('/user/:user_id/fallow', fallow.index);
 	app.post('/user/:user_id/fallowing/:fallowing_id', fallow.storeFallowing);
 	app.post('/user/:user_id/fallowed/:fallowed_id', fallow.storeFallowed);
-	app.put('/user/:user_id/fallow/:fallowing_id', fallow.updateFallowing);
-	app.put('/user/:user_id/fallow/:fallowed_id', fallow.updateFallowed);
 	app.delete('/user/:user_id/fallow/:fallowing_id', fallow.deleteFallowing);
 	app.delete('/user/:user_id/fallow/:fallowed_id', fallow.deleteFallowed);
 

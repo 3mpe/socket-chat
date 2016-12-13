@@ -6,7 +6,7 @@ const userCrud = {};
 /* find mongoose item and update  */
 function update(params, updateParams, calback) {
 	if (calback instanceof Function) {
-		User.findByIdAndUpdate(params, update, calback());
+		User.findByIdAndUpdate(params, updateParams, calback());
 	}
 };
 
