@@ -10,10 +10,12 @@ function update(params, updateParams, calback) {
 	}
 };
 
-userCrud.me = function (request,response,next) {
-	User.find({token:request.body.token},function (error,findUser) {
-		if (error) { return response.status(422).json({ error: error.errors }); }
-		
+userCrud.me = function (request, response, next) {
+	User.find({ token: request.body.token }, function (error, findUser) {
+		if (error) {
+			return response.status(422).json({ error: error.errors });
+		}
+
 	});
 };
 userCrud.login = function (request, response, next) {
@@ -56,10 +58,17 @@ userCrud.logout = function (request, response, next) {
 	});
 };
 userCrud.store = function (request, response, next) {
+
+	if (request.body) {
+		return response.send(403);
+	}
 	User.find({ email: request.body.email, password: request.body.password }, function (error, findUser) {
-		if (error) { return response.status(422).json({ error: error.errors }); }
-		if (findUser.length > 0 ) { return response.json({message:' This user is available ', data:findUser}); }
-		else{
+		if (error) {
+			return response.status(422).json({ error: error.errors });
+		}
+		if (findUser.length > 0) {
+			return response.json({ message: ' This user is available ', data: findUser });
+		} else {
 			var token = require('../lib/token');
 			var data = {
 				token: token,
@@ -79,19 +88,10 @@ userCrud.store = function (request, response, next) {
 				return response.json({ message: 'user added!', data: savedUser });
 			});
 		}
-	});	
+	});
 };
 userCrud.update = function (request, response, next) {
-	var data = {
-		name: request.body.name,
-		age: request.body.age,
-		residance: request.body.residance,
-		email: request.body.email,
-		password: request.body.password,
-		phone: request.body.phone,
-		status: request.body.status
-	}
-	update({ _id: request.body.id }, data, function (error, item) {
+	update({ token: request.token }, request.body, function (error, item) {
 		if (error) {
 			return response.json(err.errors);
 		}
@@ -99,7 +99,7 @@ userCrud.update = function (request, response, next) {
 	});
 };
 userCrud.delete = function (request, response, next) {
-	update({ _id: request.body.id }, { status: 'Deleted' }, function (error, item) {
+	update({ token: request.token }, { status: 'Deleted' }, function (error, item) {
 		if (error) { response.json({ message: ' user is not deleted! ' }); }
 		return response.json({ message: 'user deleted !', data: item });
 	});
