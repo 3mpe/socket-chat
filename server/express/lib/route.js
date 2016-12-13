@@ -14,8 +14,11 @@ function load(app) {
 	app.delete('/user/fallow/:fallowed_id', fallow.deleteFallowed);
 
 	const { message } = require('../controller/message');
-	app.get('/user/:user_id/message', message.index);
-	app.delete('/user/:user_id/message', message.delete);
+	app.get('/user/message', message.index);
+	app.post('/user/message/:reciver_id', message.storesender);
+	app.post('/user/message/:sender_id', message.storereciver);
+	app.post('/user/message/:sender_id', message.deletesender);
+	app.post('/user/message/:reciver_id', message.deletereciver);
 }
 module.exports = {
 	load

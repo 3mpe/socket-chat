@@ -2,7 +2,7 @@ const mongoose = required('mongoose');
 const Schema = mongoose.Schema;
 
 const userMessageSchema = Schema({
-	conversations: [{ type: Schema.Types.ObjectId, ref: 'conversations' }],
+	conversations_hid: { type: String },
 	name: {
 		type: String
 	},

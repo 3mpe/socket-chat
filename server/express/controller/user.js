@@ -60,7 +60,7 @@ userCrud.logout = function (request, response, next) {
 userCrud.store = function (request, response, next) {
 
 	if (request.body) {
-		return response.send(403);
+		return response.json({message : 'body can not be empty' }).send(403);
 	}
 	User.find({ email: request.body.email, password: request.body.password }, function (error, findUser) {
 		if (error) {

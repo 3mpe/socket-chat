@@ -31,7 +31,7 @@ fallow.index = function (request, response, next) {
 };
 fallow.storeFallowing = function (request, response, next) {
 	findUser(request, response, function (foundUser) {
-		foundUser.find({ user_id: request.body.fallowing_id }, function (error, findfallowing_id) {
+		foundUser.find({ user_id: request.params.fallowing_id }, function (error, findfallowing_id) {
 			if (error) { response.json({ message: error.errors }); }
 			if (findfallowing_id.length > 0) {
 				return response.json({ message: 'fallowing is exist !' });
@@ -52,7 +52,7 @@ fallow.storeFallowing = function (request, response, next) {
 };
 fallow.storeFallowed = function (request, response, next) {
 	findUser(request, response, function (foundUser) {
-		findUser.find({ user_id: request.body.fallowed_id }, function (error, findfallowed_id) {
+		findUser.find({ user_id: request.params.fallowed_id }, function (error, findfallowed_id) {
 			if (error) { response.json({ message: error.errors }); }
 			if (findfallowed_id.length > 0) {
 				return response.json({ message: 'fallowed is exist !' });
@@ -72,7 +72,7 @@ fallow.storeFallowed = function (request, response, next) {
 };
 fallow.deleteFallowing = function (request, response, next) {
 	findUser(request, response, function (foundUser) {
-		update({ user_id: foundUser.user_id, fallowing_id: request.body.fallowing_id }, { status: 'Deleted' }, function (foundFallo) {
+		update({ user_id: foundUser.user_id, fallowing_id: request.params.fallowing_id }, { status: 'Deleted' }, function (foundFallo) {
 			if (error) { response.json({ message: ' fallowing is not deleted! ' }); }
 			return response.json({ message: 'fallowing deleted !', data: foundFallo });
 		});
@@ -80,7 +80,7 @@ fallow.deleteFallowing = function (request, response, next) {
 };
 fallow.deleteFallowed = function (request, response, next) {
 	findUser(request, response, function (foundUser) {
-		update({ user_id: foundUser.user_id, fallowed_id: request.body.fallowed_id }, { status: 'Deleted' }, function (foundFallo) {
+		update({ user_id: foundUser.user_id, fallowed_id: request.params.fallowed_id }, { status: 'Deleted' }, function (foundFallo) {
 			if (error) { response.json({ message: ' fallowed is not deleted! ' }); }
 			return response.json({ message: 'fallowed deleted !', data: foundFallo });
 		});
