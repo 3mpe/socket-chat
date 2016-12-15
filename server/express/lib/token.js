@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const config = require('./config');
-var token = jwt.sign({ secret: config.scret }, 'shhhhh');
 
-module.exports = token;
+module.exports = function (user) {
+	return jwt.sign({ data: user, secret: config.scret }, 'shhhhh');
+};
 

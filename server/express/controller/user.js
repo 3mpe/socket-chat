@@ -1,25 +1,25 @@
-const token = require('../lib/token');
+const Token = require('../lib/token');
 const User = require('../models/users');
+const fallow = require('../models/fallow');
 
 const userCrud = {};
 
 /* find mongoose item and update  */
 function update(params, updateParams, calback) {
 	if (calback instanceof Function) {
-		User.findByIdAndUpdate(params, updateParams, calback());
+		User.findByIdAndUpdate(params, updateParams, calback);
 	}
 };
 
 userCrud.me = function (request, response, next) {
-	User.find({ token: request.body.token }, function (error, findUser) {
-		if (error) {
-			return response.status(422).json({ error: error.errors });
-		}
-
+	User.findOne({ token: request.token }, function (error, findUser) {
+		if (error) { return response.status(422).json({ error: error.errors }); }
+		if ( findUser.length < 1 ) { response.json({ message: 'You must log in' }).send(403); }
+		return response.json({ data: findUser });
 	});
 };
 userCrud.login = function (request, response, next) {
-	User.find({ email: request.body.email, password: request.body.password }, function (err, user) {
+	User.findOne({ email: request.body.email, password: request.body.password }, function (err, user) {
 		if (err) {
 			response.json({
 				type: false,
@@ -27,14 +27,9 @@ userCrud.login = function (request, response, next) {
 			});
 		} else {
 			if (user) {
-
-				var token = token;
+				var token = Token({ email: user.email, phone: user.phone });
 				update({ _id: user._id }, { token: token }, function (error, data) {
-					response.json({
-						type: true,
-						data: data,
-						token: token
-					});
+					response.json({ type: true, message: 'Login successful', status: user.status, token: token });
 				});
 			} else {
 				response.json({
@@ -48,7 +43,7 @@ userCrud.login = function (request, response, next) {
 userCrud.logout = function (request, response, next) {
 	User.find({ token: request.headers['Authorization'] }, function (error, user) {
 		if (error) { response.send(error); } else {
-			update({ token: request.headers['Authorization'] }, { token: null }, function (error, data) {
+			update({ token: request.headers['Authorization'] }, { token: '' }, function (error, data) {
 				response.json({
 					type: true,
 					data: 'user is logout !',
@@ -57,22 +52,26 @@ userCrud.logout = function (request, response, next) {
 		}
 	});
 };
-userCrud.store = function (request, response, next) {
 
-	if (request.body) {
-		return response.json({message : 'body can not be empty' }).send(403);
+
+userCrud.store = function (request, response, next) {
+	if (request.body === undefined || request.body.email === undefined || request.body.password === undefined) {
+		return response.status(403).json({ message: 'body can not be empty' });
 	}
-	User.find({ email: request.body.email, password: request.body.password }, function (error, findUser) {
+	User.find({ email: request.body.email, password: request.body.password }, { _id: 0, __v: 0 }, function (error, findUser) {
 		if (error) {
 			return response.status(422).json({ error: error.errors });
 		}
 		if (findUser.length > 0) {
 			return response.json({ message: ' This user is available ', data: findUser });
 		} else {
-			var token = require('../lib/token');
+			var { token } = require('../lib/token');
 			var data = {
 				token: token,
-				name: request.body.name,
+				name: {
+					first: request.body.first,
+					last: request.body.last
+				},
 				age: request.body.age,
 				residance: request.body.residance,
 				email: request.body.email,

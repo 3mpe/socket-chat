@@ -1,6 +1,7 @@
 function load(app) {
 
 	const { userCrud } = require('../controller/user');
+	app.get('/user/me', userCrud.me);
 	app.post('/user/login', userCrud.login);
 	app.post('/user/store', userCrud.store);
 	app.put('/user/update', userCrud.update);
@@ -9,9 +10,6 @@ function load(app) {
 	const { fallow } = require('../controller/fallow');
 	app.get('/user/fallow', fallow.index);
 	app.post('/user/fallowing/:fallowing_id', fallow.storeFallowing);
-	app.post('/user/fallowed/:fallowed_id', fallow.storeFallowed);
-	app.delete('/user/fallow/:fallowing_id', fallow.deleteFallowing);
-	app.delete('/user/fallow/:fallowed_id', fallow.deleteFallowed);
 
 	const { message } = require('../controller/message');
 	app.get('/user/message', message.index);
