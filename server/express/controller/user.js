@@ -1,6 +1,5 @@
 const Token = require('../lib/token');
 const User = require('../models/users');
-const fallow = require('../models/fallow');
 
 const userCrud = {};
 
@@ -14,6 +13,7 @@ function update(params, updateParams, calback) {
 userCrud.me = function (request, response, next) {
 	User.findOne({ token: request.token }, function (error, findUser) {
 		if (error) { return response.status(422).json({ error: error.errors }); }
+		if (findUser === null) { return response.json({ message:'find user not found !' }); }
 		if ( findUser.length < 1 ) { response.json({ message: 'You must log in' }).send(403); }
 		return response.json({ data: findUser });
 	});

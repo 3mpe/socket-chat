@@ -8,8 +8,9 @@ function load(app) {
 	app.delete('/user/delete', userCrud.delete);
 
 	const { fallow } = require('../controller/fallow');
-	app.get('/user/fallow', fallow.index);
-	app.post('/user/fallowing/:fallowing_id', fallow.storeFallowing);
+	app.get('/user/fallowed/:user_id', fallow.fallowed);
+	app.get('/user/fallower/:user_id', fallow.fallower);
+	app.post('/user/fallowing/:user_id', fallow.storeFallower);
 
 	const { message } = require('../controller/message');
 	app.get('/user/message', message.index);

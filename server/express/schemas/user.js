@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const fallow = require('../models/fallow');
 const singupdate = require('../models/singupdate');
 const Schema = mongoose.Schema;
 
@@ -13,7 +12,14 @@ var users = Schema({
 	password: { type: String, require: true },
 	phone: { type: String },
 	status: { type: String },
-	fallow: [{ type: Schema.Types.ObjectId, ref: 'fallow' }],
+	fallow: {
+		follower: [{
+			user_id: { type: String }
+		}],
+		followed: [{
+			user_id: { type: String }
+		}]
+	},
 	singupDate: [{ type: Schema.Types.ObjectId, ref: 'singupdate' }]
 });
 
