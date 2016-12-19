@@ -29,6 +29,7 @@ middleware.load = function (app) {
 		if (req.cookies.token) {
 			User.findOne({ token: request.token }, { __v: 0 }, function (error, foundUser) {
 				if (error) { response.json({ message: error.errors }); }
+				if (foundUser.length < 1 ) { return resp.status(404).json({ message:'user not found' }); }
 				req.cookies.foundUser = foundUser;
 			});
 		}
@@ -37,7 +38,6 @@ middleware.load = function (app) {
 
 
 	app.use(function (req, res, next) {
-		console.log('session', req.cookies);
 		// check header or url parameters or post parameters for token
 		if (req.url !== "/user/store" && req.url !== "/user/login") {
 			var token = req.body.token || req.query.token || req.headers['Authorization'] || req.headers['authorization'];
