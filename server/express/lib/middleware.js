@@ -21,20 +21,33 @@ middleware.load = function (app) {
 	});
 
 	app.use(logger('dev')); // günlük log saklamak için
-	app.use(cookieParser());
+	app.use(cookieParser({ scret: config.scret }));
 	app.use(bodyParser.json());
 	app.use(bodyParser.urlencoded({ extended: false }));
 
+	app.use(function (req, resp, next) {
+		if (req.cookies.token) {
+			User.findOne({ token: request.token }, { __v: 0 }, function (error, foundUser) {
+				if (error) { response.json({ message: error.errors }); }
+				req.cookies.foundUser = foundUser;
+			});
+		}
+		next();
+	});
+
+
 	app.use(function (req, res, next) {
+		console.log('session', req.cookies);
 		// check header or url parameters or post parameters for token
-		if (req.url !== "/user/store" && req.url !== "/user/login" ) {
+		if (req.url !== "/user/store" && req.url !== "/user/login") {
 			var token = req.body.token || req.query.token || req.headers['Authorization'] || req.headers['authorization'];
 			//decode token
 			if (token) {
 				const jwt = require('jsonwebtoken');
 				jwt.verify(token, 'shhhhh', function (err, decoded) {
 					if (err) { res.json({ success: false, message: 'Failed to authenticate token.' }); }
-					req.token = token;
+					//req.token = token;
+					req.cookies.token = token;
 					next();
 				});
 			} else {
