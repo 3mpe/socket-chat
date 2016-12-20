@@ -11,12 +11,11 @@ function update(params, updateParams, calback) {
 };
 
 userCrud.me = function (request, response, next) {
-	User.findOne({ token: request.token }, function (error, findUser) {
-		if (error) { return response.status(422).json({ error: error.errors }); }
-		if (findUser === null) { return response.json({ message:'find user not found !' }); }
-		if ( findUser.length < 1 ) { response.json({ message: 'You must log in' }).send(403); }
-		return response.json({ data: findUser });
-	});
+	if (request.cookies.foundUser === null) {
+		return response.json({ message: 'find user not found !' });
+	}
+	if (request.cookies.foundUser.length < 1) { response.json({ message: 'You must log in' }).send(403); }
+	return response.json({ data: request.cookies.foundUser });
 };
 userCrud.login = function (request, response, next) {
 	User.findOne({ email: request.body.email, password: request.body.password }, function (err, user) {
@@ -41,15 +40,11 @@ userCrud.login = function (request, response, next) {
 	});
 };
 userCrud.logout = function (request, response, next) {
-	User.find({ token: request.headers['Authorization'] }, function (error, user) {
-		if (error) { response.send(error); } else {
-			update({ token: request.headers['Authorization'] }, { token: '' }, function (error, data) {
-				response.json({
-					type: true,
-					data: 'user is logout !',
-				});
-			});
-		}
+	update({ token: request.cookies.token }, { token: '' }, function (error, data) {
+		response.json({
+			type: true,
+			data: 'user is logout !',
+		});
 	});
 };
 
@@ -90,7 +85,7 @@ userCrud.store = function (request, response, next) {
 	});
 };
 userCrud.update = function (request, response, next) {
-	update({ token: request.token }, request.body, function (error, item) {
+	update({ token: request.cookies.token }, request.body, function (error, item) {
 		if (error) {
 			return response.json(err.errors);
 		}
@@ -98,7 +93,7 @@ userCrud.update = function (request, response, next) {
 	});
 };
 userCrud.delete = function (request, response, next) {
-	update({ token: request.token }, { status: 'Deleted' }, function (error, item) {
+	update({ token: request.cookies.token }, { status: 'Deleted' }, function (error, item) {
 		if (error) { response.json({ message: ' user is not deleted! ' }); }
 		return response.json({ message: 'user deleted !', data: item });
 	});

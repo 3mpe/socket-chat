@@ -25,4 +25,3 @@ var users = Schema({
 
 
 module.exports = users;
-

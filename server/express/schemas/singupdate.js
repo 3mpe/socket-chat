@@ -9,4 +9,3 @@ const singUpDateSchema = Schema({
 });
 
 module.exports = singUpDateSchema;
-

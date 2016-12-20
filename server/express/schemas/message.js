@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const userMessageSchema = Schema({
-	conversations_hid: { type: String },
+	conversations_hid: { type: Schema.Types.ObjectId, ref: 'conversations' },
 	name: {
 		type: String
 	},
@@ -12,4 +12,3 @@ const userMessageSchema = Schema({
 });
 
 module.exports = userMessageSchema;
-

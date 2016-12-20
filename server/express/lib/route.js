@@ -14,10 +14,10 @@ function load(app) {
 
 	const { message } = require('../controller/message');
 	app.get('/user/message', message.index);
-	app.post('/user/message/:reciver_id', message.storesender);
-	app.post('/user/message/:sender_id', message.storereciver);
-	app.post('/user/message/:sender_id', message.deletesender);
-	app.post('/user/message/:reciver_id', message.deletereciver);
+	app.post('/user/message/sender/:reciver_id', message.storesender);
+	app.post('/user/message/reciver/:sender_id', message.storereciver);
+	app.delete('/user/message/:sender_id', message.deletesender);
+	app.delete('/user/message/:reciver_id', message.deletereciver);
 }
 module.exports = {
 	load

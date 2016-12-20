@@ -4,7 +4,6 @@ const Schema = mongoose.Schema;
 
 const conversationsSchema = Schema({
 	sender_id: {
-		// sender_id =  user_id
 		type: String
 	},
 	reciver_id: {
@@ -17,4 +16,3 @@ const conversationsSchema = Schema({
 });
 
 module.exports = conversationsSchema;
-

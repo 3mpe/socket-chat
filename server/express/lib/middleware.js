@@ -6,6 +6,7 @@ const MongoStore = require('connect-mongo')(session);
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const dbconnect = require('./dbconnect');
+var User = require('../models/users');
 
 // Init
 const middleware = {};
@@ -16,7 +17,6 @@ middleware.load = function (app) {
 		response.header("Access-Control-Allow-Origin", "http://localhost:3000");
 		response.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
 		response.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-
 		next();
 	});
 
@@ -24,18 +24,6 @@ middleware.load = function (app) {
 	app.use(cookieParser({ scret: config.scret }));
 	app.use(bodyParser.json());
 	app.use(bodyParser.urlencoded({ extended: false }));
-
-	app.use(function (req, resp, next) {
-		if (req.cookies.token) {
-			User.findOne({ token: request.token }, { __v: 0 }, function (error, foundUser) {
-				if (error) { response.json({ message: error.errors }); }
-				if (foundUser.length < 1 ) { return resp.status(404).json({ message:'user not found' }); }
-				req.cookies.foundUser = foundUser;
-			});
-		}
-		next();
-	});
-
 
 	app.use(function (req, res, next) {
 		// check header or url parameters or post parameters for token
@@ -46,7 +34,7 @@ middleware.load = function (app) {
 				const jwt = require('jsonwebtoken');
 				jwt.verify(token, 'shhhhh', function (err, decoded) {
 					if (err) { res.json({ success: false, message: 'Failed to authenticate token.' }); }
-					//req.token = token;
+					req.token = token;
 					req.cookies.token = token;
 					next();
 				});
@@ -54,8 +42,21 @@ middleware.load = function (app) {
 				res.send(403);
 			}
 		} else { next(); }
-
 	});
+
+	app.use(function (req, resp, next) {
+		if (req.url !== "/user/store" && req.url !== "/user/login") {
+			if (req.cookies.token) {
+				User.findOne({ token: req.cookies.token }, { __v: 0 }, function (error, foundUser) {
+					if (error) { resp.json({ message: error.errors }); }
+					if (foundUser === null ) { resp.json({message: 'user not found . '}); }
+					req.cookies.foundUser = foundUser;
+					next();
+				});
+			}
+		} else { next(); }
+	});
+
 };
 
 module.exports = middleware;
