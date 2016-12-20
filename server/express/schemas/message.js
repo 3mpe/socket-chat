@@ -9,6 +9,6 @@ const userMessageSchema = Schema({
 	message: {
 		type: String
 	}
-});
+}, { __v: false });
 
 module.exports = userMessageSchema;

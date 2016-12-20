@@ -7,4 +7,3 @@ function loadApp(server) {
 }
 
 module.exports = { loadApp };
-
