@@ -11,7 +11,7 @@ open the dbconnect.js file. config your database name and password.
 
 ### How to start it?
 
-> npm start
+> nodemon server.js
 
 ### Last but not least
 
