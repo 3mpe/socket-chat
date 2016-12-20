@@ -1,6 +1,6 @@
 const notification = {};
-notification.loadApp = function (socket) {
-	server.on('message:send',function	(socketData) {
+notification.listen = function (socket) {
+	server.on('message:send',function	(id, socketData) {
 		server.emit('notification:push', { message:' new notification ' });
 	})
 };

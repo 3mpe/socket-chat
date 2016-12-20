@@ -6,7 +6,7 @@ const message_ = {};
 message_.listen = function (socket) {
 
 	//mongoose write
-	server.on('message:storesender',function (socketData) {
+	server.on('message:storesender',function (id, socketData) {
 		/* send message reciver_id  */
 		const Conversations = new conversations({
 			sender_id: socketData.sender_id,
@@ -39,7 +39,7 @@ message_.listen = function (socket) {
 
 	});
 
-	server.on('message:send',function (socketData) {
+	server.on('message:send',function (id, socketData) {
 		socket.emit('inbox', { name:socketData.first, message:socketData.message });
 	});
 };
