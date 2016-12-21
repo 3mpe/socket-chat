@@ -1,5 +1,6 @@
 // Modules
 const config = require('./config');
+const express = require('express');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
@@ -20,6 +21,7 @@ middleware.load = function (app) {
 		next();
 	});
 
+	app.use('/socket.io.js',express.static('node_modules/socket.io-client/socket.io.js'));
 	app.use(logger('dev')); // günlük log saklamak için
 	app.use(cookieParser({ scret: config.scret }));
 	app.use(bodyParser.json());
@@ -60,4 +62,3 @@ middleware.load = function (app) {
 };
 
 module.exports = middleware;
-
