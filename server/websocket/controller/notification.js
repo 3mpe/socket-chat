@@ -1,7 +1,7 @@
 const notification = {};
 notification.listen = function (socket) {
-	server.on('message:send',function	(id, socketData) {
-		server.emit('notification:push', { message:' new notification ' });
+	socket.on('message:send',function	(id, socketData) {
+		socket.emit('notification:push', { message:' new notification ' });
 	})
 };
 module.exports = { notification }
