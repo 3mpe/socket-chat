@@ -15,21 +15,21 @@ const middleware = {};
 middleware.load = function (app) {
 
 	app.use(function (request, response, next) {
-		response.header("Access-Control-Allow-Origin", "http://localhost:3000");
+		response.header("Access-Control-Allow-Origin", "*");
 		response.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
-		response.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+		response.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, uthorization");
 		next();
 	});
 
 	app.use('/socket.io.js',express.static('node_modules/socket.io-client/socket.io.js'));
 	app.use(logger('dev'));
-	app.use(cookieParser({ scret: config.scret }));
+	app.use(cookieParser( config.scret ));
 	app.use(bodyParser.json());
 	app.use(bodyParser.urlencoded({ extended: false }));
 
 	app.use(function (req, res, next) {
 		// check header or url parameters or post parameters for token
-		if (req.url !== "/user/store" && req.url !== "/user/login") {
+		if (req.url !== "/api/user/store" && req.url !== "/api/user/login") {
 			var token = req.body.token || req.query.token || req.headers['Authorization'] || req.headers['authorization'];
 			//decode token
 			if (token) {
@@ -47,7 +47,7 @@ middleware.load = function (app) {
 	});
 
 	app.use(function (req, resp, next) {
-		if (req.url !== "/user/store" && req.url !== "/user/login") {
+		if (req.url !== "/api/user/store" && req.url !== "/api/user/login") {
 			if (req.cookies.token) {
 				User.findOne({ token: req.cookies.token }, { __v: 0 }, function (error, foundUser) {
 					if (error) { resp.json({ message: error.errors }); }
